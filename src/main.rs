@@ -38,10 +38,12 @@ struct Pendulum {
     angle: f32,
 
     angular_velocity: f32,
-    angular_aacceleration: f32,
+    angular_acceleration: f32,
 
     r: f32,
-    g: f32
+    g: f32,
+
+    friction: f32
 }
 
 impl Pendulum {
@@ -52,17 +54,20 @@ impl Pendulum {
             position: Vector::new(x, y),
             angle: 45.0,
             angular_velocity: 0.0,
-            angular_aacceleration: 0.0,
+            angular_acceleration: 0.0,
 
             r,
-            g: 0.85
+            g: 0.85,
+
+            friction: 0.98
         }
         
     }
 
     fn update(&mut self) {
-        self.angular_aacceleration = -1.0 * self.g * self.angle.sin() / self.r;
-        self.angular_velocity += self.angular_aacceleration;
+        self.angular_acceleration = -1.0 * self.g * self.angle.sin() / self.r;
+        self.angular_velocity += self.angular_acceleration;
+        self.angular_velocity *= self.friction;
         self.angle += self.angular_velocity;
 
         self.position.set(self.r * self.angle.sin(), self.r * self.angle.cos());
